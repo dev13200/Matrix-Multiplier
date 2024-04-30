@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Multiplication Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        input[type="number"] {
+            width: 50px;
+            text-align: center;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #resultMatrix {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Matrix Multiplication Calculator</h1>
+
+<h2>Matrix A</h2>
+<table id="matrixA"></table>
+
+<h2>Matrix B</h2>
+<table id="matrixB"></table>
+
+<button onclick="multiplyMatrices()">Multiply Matrices</button>
+
+<h2>Result Matrix</h2>
+<table id="resultMatrix"></table>
+
+<script>
+    function createMatrixInput(tableId, rows, cols) {
+        var table = document.getElementById(tableId);
+        table.innerHTML = '';
+
+        for (var i = 0; i < rows; i++) {
+            var row = table.insertRow();
+            for (var j = 0; j < cols; j++) {
+                var cell = row.insertCell();
+                var input = document.createElement("input");
+                input.type = "number";
+                input.value = 0;
+                input.setAttribute("step", "any");
+                cell.appendChild(input);
+            }
+        }
+    }
+
+    function multiplyMatrices() {
+        var matrixA = getMatrixValues("matrixA");
+        var matrixB = getMatrixValues("matrixB");
+
+        if (matrixA[0].length !== matrixB.length) {
+            alert("Number of columns in Matrix A must be equal to the number of rows in Matrix B");
+            return;
+        }
+
+        var resultMatrix = multiply(matrixA, matrixB);
+
+        displayMatrix("resultMatrix", resultMatrix);
+    }
+
+    function getMatrixValues(tableId) {
+        var table = document.getElementById(tableId);
+        var rows = table.getElementsByTagName("tr");
+        var matrix = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            var rowData = [];
+            var cells = rows[i].getElementsByTagName("input");
+            for (var j = 0; j < cells.length; j++) {
+                rowData.push(parseFloat(cells[j].value));
+            }
+            matrix.push(rowData);
+        }
+
+        return matrix;
+    }
+
+    function multiply(matrixA, matrixB) {
+        var result = [];
+        for (var i = 0; i < matrixA.length; i++) {
+            result[i] = [];
+            for (var j = 0; j < matrixB[0].length; j++) {
+                var sum = 0;
+                for (var k = 0; k < matrixA[0].length; k++) {
+                    sum += matrixA[i][k] * matrixB[k][j];
+                }
+                result[i][j] = sum;
+            }
+        }
+        return result;
+    }
+
+    function displayMatrix(tableId, matrix) {
+        var table = document.getElementById(tableId);
+        table.innerHTML = '';
+
+        for (var i = 0; i < matrix.length; i++) {
+            var row = table.insertRow();
+            for (var j = 0; j < matrix[i].length; j++) {
+                var cell = row.insertCell();
+                cell.textContent = matrix[i][j];
+            }
+        }
+    }
+
+    createMatrixInput("matrixA", 2, 2);
+    createMatrixInput("matrixB", 2, 2);
+</script>
+
+</body>
+</html>
